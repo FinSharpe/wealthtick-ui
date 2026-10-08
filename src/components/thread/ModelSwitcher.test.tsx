@@ -57,7 +57,8 @@ describe("<ModelSwitcher />", () => {
         "Deepseek V4.1 Flash",
       ]),
     );
-    expect(optionLabels).toHaveLength(Object.keys(PlannerModels).length);
+    expect(optionLabels).toContain("Auto");
+    expect(optionLabels).toHaveLength(Object.keys(PlannerModels).length + 1);
   });
 
   it("fires onValueChange with the provider:model enum string when a user picks an option", async () => {

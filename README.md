@@ -2,6 +2,16 @@
 
 Agent Chat UI is a Next.js application which enables chatting with any LangGraph server with a `messages` key through a chat interface.
 
+## WealthTick chat
+
+The chat uses the finalized shared template's FinSharpe-Mobile presentation: local Inter 400/500/600, navy and blue surfaces, compact messages, a pill composer, suggested prompts, and searchable conversation history with date groups. Desktop history uses a sidebar; narrow screens use a drawer.
+
+The existing LangGraph SDK, API authentication, deployment settings, and WealthTick OpenRouter model catalog remain integrated. A valid `/api/models` catalog enables run `context: { model, model_switcher_enabled: false }`; deployments without it retain `config.configurable.tradekit_agent_model`. Model choices and recovery state are scoped to their deployment and conversation. Switching, reconnecting, stopping, retrying, edits with attachments, checkpoints, and custom UI retain their existing integrations.
+
+Tool disclosures preserve local ordering and expansion during streaming. One or two consecutive calls appear individually; three or more form an expandable local group. Reports remain beside their originating calls and remain visible when raw tool details are hidden. The existing MCP host retains negotiated protocol versions, host identity, class-based themes, and structured-data updates, with embedded report fonts, self-contained document restrictions, and reload recovery. Filing citations include passages and authenticated PDF retrieval.
+
+Run `pnpm test`, `pnpm lint`, `pnpm exec tsc --noEmit`, and `pnpm build` to verify changes. `node tests/support/mock-langgraph-server.mjs` starts the synthetic chat backend on `127.0.0.1:3200`; use temporary `NEXT_PUBLIC_API_URL=http://127.0.0.1:3200` and `NEXT_PUBLIC_ASSISTANT_ID=orchestrator` for local UI validation without changing saved deployment configuration. Production smoke testing still requires an authenticated deployment.
+
 > [!NOTE]
 > 🎥 Watch the video setup guide [here](https://youtu.be/lInrwVnZ83o).
 

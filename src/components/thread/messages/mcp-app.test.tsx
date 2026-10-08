@@ -883,6 +883,48 @@ describe("<McpAppToolMessage /> while the view is loading", () => {
     expect(loadingNotes()).toHaveLength(1);
     expect(stillLoading.parentElement).toHaveTextContent("MF Report");
   });
+
+  it("offers a reload when the report never initializes, then accepts the new handshake", () => {
+    vi.useFakeTimers();
+    try {
+      render(<McpAppToolMessage message={viewMessage()} />);
+      const first = frame();
+      act(() => vi.advanceTimersByTime(15000));
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "The report did not open",
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Reload report" }));
+      const reloaded = frame();
+      expect(reloaded).not.toBe(first);
+      hostPosts(reloaded);
+      guestSends(reloaded, initialize());
+      guestSends(reloaded, initialized);
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+      expect(screen.queryByText("Loading")).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("does not fail a silent document that loaded successfully", () => {
+    vi.useFakeTimers();
+    try {
+      render(
+        <McpAppToolMessage
+          message={viewMessage({ html: "<p>A static report.</p>" })}
+        />,
+      );
+      fireEvent.load(frame());
+      act(() => vi.advanceTimersByTime(15000));
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: "Reload report" }),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByText("Loading")).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });
 
 describe("<McpAppToolMessage /> white-labelling", () => {
