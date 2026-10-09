@@ -141,11 +141,12 @@ describe("<McpAppToolMessage /> frame", () => {
     expect(frame().getAttribute("srcdoc")).not.toBeNull();
   });
 
-  it("names the frame and its heading after the tool", () => {
+  it("names the accessible frame and region without duplicating the report title", () => {
     render(<McpAppToolMessage message={viewMessage()} />);
     expect(
-      screen.getByRole("heading", { name: "Stock Report" }),
+      screen.getByRole("region", { name: "Stock Report" }),
     ).toBeInTheDocument();
+    expect(screen.queryByRole("heading")).not.toBeInTheDocument();
     expect(frame().title).toBe("Stock Report");
   });
 
@@ -154,7 +155,7 @@ describe("<McpAppToolMessage /> frame", () => {
       <McpAppToolMessage message={viewMessage({ title: "Infosys Ltd." })} />,
     );
     expect(
-      screen.getByRole("heading", { name: "Infosys Ltd." }),
+      screen.getByRole("region", { name: "Infosys Ltd." }),
     ).toBeInTheDocument();
     expect(frame("Infosys Ltd.")).toBeInTheDocument();
   });
@@ -778,7 +779,7 @@ describe("<McpAppToolMessage /> while the view is loading", () => {
   // A view runs no script until the stylesheets it links to have arrived, and
   // the report views link a web font: on a slow or filtered network the frame
   // is an empty box for as long as that takes.
-  const loadingNotes = () => screen.queryAllByText("Loading");
+  const loadingNotes = () => screen.queryAllByText("Opening report…");
 
   it("says so until the guest starts its handshake", () => {
     render(<McpAppToolMessage message={viewMessage()} />);
@@ -795,10 +796,10 @@ describe("<McpAppToolMessage /> while the view is loading", () => {
 
     guestSends(iframe, initialize());
     expect(loadingNotes()).toHaveLength(0);
-    // Said beside the heading — the frame itself is left alone.
+    // The loading note clears and the accessible frame is left alone.
     expect(frame()).toBe(iframe);
     expect(
-      screen.getByRole("heading", { name: "Stock Report" }),
+      screen.getByRole("region", { name: "Stock Report" }),
     ).toBeInTheDocument();
   });
 
@@ -881,7 +882,10 @@ describe("<McpAppToolMessage /> while the view is loading", () => {
 
     const [stillLoading] = loadingNotes();
     expect(loadingNotes()).toHaveLength(1);
-    expect(stillLoading.parentElement).toHaveTextContent("MF Report");
+    expect(stillLoading.closest("section")).toHaveAttribute(
+      "aria-label",
+      "MF Report",
+    );
   });
 
   it("offers a reload when the report never initializes, then accepts the new handshake", () => {
@@ -900,7 +904,7 @@ describe("<McpAppToolMessage /> while the view is loading", () => {
       guestSends(reloaded, initialize());
       guestSends(reloaded, initialized);
       expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-      expect(screen.queryByText("Loading")).not.toBeInTheDocument();
+      expect(screen.queryByText("Opening report…")).not.toBeInTheDocument();
     } finally {
       vi.useRealTimers();
     }
@@ -920,7 +924,7 @@ describe("<McpAppToolMessage /> while the view is loading", () => {
       expect(
         screen.queryByRole("button", { name: "Reload report" }),
       ).not.toBeInTheDocument();
-      expect(screen.queryByText("Loading")).not.toBeInTheDocument();
+      expect(screen.queryByText("Opening report…")).not.toBeInTheDocument();
     } finally {
       vi.useRealTimers();
     }
@@ -945,13 +949,13 @@ describe("<McpAppToolMessage /> white-labelling", () => {
     // words a person reads there, and the ones a screen reader is given.
     const chrome = container.cloneNode(true) as HTMLElement;
     chrome.querySelector("iframe")?.removeAttribute("srcdoc");
-    expect(chrome.textContent).toBe("Stock Report");
+    expect(chrome.textContent).toBe("");
     expect(
       [...chrome.querySelectorAll("*")].flatMap((element) =>
         ["title", "aria-label", "alt"].flatMap(
           (name) => element.getAttribute(name) ?? [],
         ),
       ),
-    ).toEqual(["Stock Report"]);
+    ).toEqual(["Stock Report", "Stock Report"]);
   });
 });

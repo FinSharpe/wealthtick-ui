@@ -26,7 +26,6 @@ import {
 } from "react";
 import type { Message, ToolMessage } from "@langchain/langgraph-sdk";
 import { isEqual } from "lodash";
-import { ChartColumn, LoaderCircle } from "lucide-react";
 import {
   getMcpAppPayload,
   mcpAppHeading,
@@ -311,26 +310,27 @@ function McpAppFrame({
   }, [structuredContent, sendData]);
 
   return (
-    <div className="bg-background/70 text-foreground my-1 w-full min-w-0 overflow-hidden rounded-xl border">
-      <div className="flex items-center gap-2 border-b px-3 py-2">
-        <ChartColumn
-          aria-hidden
-          className="text-muted-foreground size-4 shrink-0"
-        />
-        <h3 className="truncate text-[11px] font-medium">{heading}</h3>
-        {loading && !failed && (
-          <span className="text-muted-foreground ml-auto flex shrink-0 items-center gap-1.5 text-xs">
-            <LoaderCircle
-              aria-hidden
-              className="size-3 animate-spin"
-            />
-            Loading
-          </span>
-        )}
-        {failed && (
+    <section
+      aria-label={heading}
+      className="my-1 min-w-0"
+    >
+      {loading && !failed && (
+        <p
+          role="status"
+          className="text-muted-foreground py-2 text-xs"
+        >
+          Opening report…
+        </p>
+      )}
+      {failed && (
+        <div className="text-muted-foreground flex flex-wrap items-center gap-2 py-2 text-xs">
+          <p role="alert">
+            The report did not open. You can reload it; the conversation is
+            saved.
+          </p>
           <button
             type="button"
-            className="text-primary ml-auto shrink-0 text-xs underline underline-offset-2"
+            className="text-primary shrink-0 underline underline-offset-2"
             onClick={() => {
               setFailed(false);
               setLiveHtml(undefined);
@@ -339,15 +339,7 @@ function McpAppFrame({
           >
             Reload report
           </button>
-        )}
-      </div>
-      {failed && (
-        <p
-          role="alert"
-          className="text-muted-foreground px-3 py-2 text-xs"
-        >
-          The report did not open. You can reload it; the conversation is saved.
-        </p>
+        </div>
       )}
       <iframe
         key={generation}
@@ -374,7 +366,7 @@ function McpAppFrame({
         className="block w-full border-0"
         style={{ height }}
       />
-    </div>
+    </section>
   );
 }
 
