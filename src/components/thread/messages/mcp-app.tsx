@@ -45,8 +45,9 @@ export function getMcpApp(message: Message): McpApp | undefined {
 /** Keep reports self-contained, with the same document policy as Mobile. */
 export function wrapGuestHtml(html: string, theme: HostTheme, fontCss = "") {
   const policy = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data: blob:; connect-src 'none'; form-action 'none'; frame-src 'none'; base-uri 'none'">`;
+  const layout = `<style data-chat-report-layout>html,body{margin:0!important;padding:0!important}body>.wrap{margin:0!important;padding:0!important}</style>`;
   const navigation = `<script>document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('a'))e.preventDefault()},true);</script>`;
-  return stampGuestTheme(html, theme, policy + fontCss + navigation);
+  return stampGuestTheme(html, theme, policy + layout + fontCss + navigation);
 }
 
 let fontPromise: Promise<string> | undefined;
@@ -312,7 +313,7 @@ function McpAppFrame({
   return (
     <section
       aria-label={heading}
-      className="my-1 min-w-0"
+      className="min-w-0"
     >
       {loading && !failed && (
         <p
