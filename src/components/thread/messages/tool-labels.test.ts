@@ -33,4 +33,32 @@ describe("formatToolName", () => {
     expect(formatToolName("   ")).toBe("Retrieve data");
     expect(formatToolName("", true)).toBe("Retrieving data");
   });
+
+  it("labels every tradekit tool the backend can bind", () => {
+    // get_returns is a plain tool; the render_* tools are the milestone-1
+    // views, bound only when the backend runs with MCP_APP_VIEWS_ENABLED.
+    expect(formatToolName("get_returns")).toBe("Calculate investment returns");
+    expect(formatToolName("get_returns", true)).toBe(
+      "Calculating investment returns",
+    );
+    expect(formatToolName("render_stock_compare")).toBe(
+      "Build the stock comparison",
+    );
+    expect(formatToolName("render_mf_compare")).toBe(
+      "Build the mutual fund comparison",
+    );
+    expect(formatToolName("render_market_pulse")).toBe(
+      "Build the market pulse",
+    );
+    expect(formatToolName("render_ipo_report")).toBe("Build the IPO report");
+    expect(formatToolName("render_mf_changes")).toBe(
+      "Build the fund’s buys and sells",
+    );
+    expect(formatToolName("render_quarterly_results", true)).toBe(
+      "Building the quarterly results report",
+    );
+    expect(formatToolName("render_scan_board", true)).toBe(
+      "Building the scan results board",
+    );
+  });
 });
