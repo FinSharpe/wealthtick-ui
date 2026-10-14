@@ -1,9 +1,6 @@
-// Friendly labels from FinSharpe-Mobile's production tool_copy.dart, except the
-// milestone-1 entries (finsharpe-mcp#83): get_returns, render_stock_compare,
-// render_mf_compare, render_market_pulse, render_ipo_report, render_mf_changes,
-// render_quarterly_results and render_scan_board were written here and are not
-// yet in tool_copy.dart. Keep them when re-syncing from mobile, or a later sync
-// drops them back to the Title Case fallback.
+// Friendly labels from FinSharpe-Mobile's production tool_copy.dart. The
+// finsharpe-mcp#83 entries (get_returns and the new render_* views) are not in
+// tool_copy.dart yet: keep them when re-syncing from mobile.
 const TOOL_LABELS: Record<string, { name: string; active: string }> = {
   call_api: {
     name: "Gather financial data",
