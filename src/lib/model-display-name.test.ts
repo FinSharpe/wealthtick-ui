@@ -10,6 +10,7 @@ describe("getModelDisplayName", () => {
     expect(getModelDisplayName("SONNET_4_5")).toBe("Sonnet 4.5");
     expect(getModelDisplayName("GPT_5_2")).toBe("Gpt 5.2");
     expect(getModelDisplayName("HAIKU_4_5")).toBe("Haiku 4.5");
+    expect(getModelDisplayName("GLM_5_3_FLASH")).toBe("Glm 5.3 Flash");
   });
 
   it("leaves single-digit keys unchanged (no adjacent digits to merge)", () => {
