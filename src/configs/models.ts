@@ -6,6 +6,9 @@
 // thread/index.tsx and falls back to the default. Display names come from the
 // key via getModelDisplayName ("GPT_5_4" -> "Gpt 5.4").
 export enum PlannerModels {
+  // The backend's default main model since 2026-10-20, so it is also what
+  // "Auto" runs; listed first so it can be picked explicitly too.
+  GLM_5_3_FLASH = "openrouter:z-ai/glm-5.3-flash",
   GPT_5_5 = "openrouter:openai/gpt-5.5",
   GPT_5_4 = "openrouter:openai/gpt-5.4",
   GPT_5_4_MINI = "openrouter:openai/gpt-5.4-mini",
